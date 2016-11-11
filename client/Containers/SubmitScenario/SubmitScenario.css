@@ -1,0 +1,49 @@
+.container {
+  width: 760px;
+  margin: 20px auto;
+}
+
+.formControl {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.formControl label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.formControl input,
+.formControl textarea {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #d3cfcf;
+  box-shadow: none;
+}
+
+.formControl textarea {
+  height: 100px;
+}
+
+.actions {
+  margin-top: 30px;
+}
+
+.actions button {
+  border: 1px solid rgb(30, 30, 30);
+  background: rgb(0, 100, 255);
+  color: #fff;
+  margin-right: 20px;
+  border-radius: 3px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  width: 150px;  cursor: pointer;
+  transition: .5s;
+}
+
+.actions button:hover {
+  background: #fff;
+  color: rgb(0, 100, 255);
+}

@@ -1,0 +1,53 @@
+.container {
+  width: 760px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.description {
+  font-size: 20px;
+}
+
+.stats {
+  font-size: 13px;
+  color: rgba(100, 100, 100, .6)
+}
+
+.newComment {
+  margin-bottom: 20px;
+}
+
+.newComment input {
+  display: inline-block;
+  width: 400px;
+  padding: 5px;
+  border: 1px solid #d3cfcf;
+  box-shadow: none;
+  border-radius: 3px 0 0 3px;
+}
+
+.newComment button {
+  border: 1px solid rgb(30, 30, 30);
+  background: rgb(0, 100, 255);
+  color: #fff;
+  border-radius: 0 3px 3px 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100px;  
+  cursor: pointer;
+  transition: .5s;
+}
+
+.newComment button:hover {
+  background: #fff;
+  color: rgb(0, 100, 255);
+}
+
+.sparkConversationLink {
+  color: blue;
+}

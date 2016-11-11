@@ -1,0 +1,29 @@
+.header {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  border-bottom: 1px solid gray;
+  background: #e1e0e0;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid gray;
+}
+
+.navItem {
+  flex: 1;
+  padding: 20px;
+  background: #fcdcdc;
+  text-align: center;
+  color: #533838;
+  transition: all .5s;
+}
+
+.navItem.active,
+.navItem:hover {
+  background: #533838;
+  color: #fcdcdc;
+}
