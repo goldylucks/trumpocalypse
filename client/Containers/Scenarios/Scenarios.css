@@ -1,0 +1,47 @@
+.container {
+  margin: 0 auto;
+  width: 760px;
+}
+
+.title {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.scenario {
+  display: flex;
+  margin: 0 auto;
+  width: 760px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  height: 75px;
+}
+
+.scenario:not(:last-child) {
+  border-bottom: 1px solid #eee;
+}
+
+.comments {
+  text-align: center;
+  margin-right: 30px;
+  color: inherit;
+  align-self: center;
+  font-size: 14px;
+}
+
+.scenarioTitle {
+  flex: 1;
+  font-size: 20px;
+  transition: opacity .5s;
+}
+
+.scenarioTitle:hover {
+  opacity: .6;
+}
+
+.scenariosStats {
+  margin-left: auto;
+  font-size: 13px;
+  color: rgba(100, 100, 100, .6)
+}

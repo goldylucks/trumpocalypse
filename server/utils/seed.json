@@ -1,0 +1,44 @@
+{
+  "users": [
+    {
+      "password": "pass1", "name": "Adam", "_id": "56f46358c558e7a529b0b42b", "email": "adam@gmail.com",
+      "scenarioVotes": { "56f46358c558e7a529b0b42b": 1 }
+    },
+    { "password": "pass2", "name": "Eve", "_id": "56f46365c558e7a529b0b42c", "email": "eve@gmail.com" }
+  ],
+
+  "scenarios": [
+    {
+        "title": "Trump smothers everybody with his gel",
+        "score": 1,
+        "userId": "56f46358c558e7a529b0b42b",
+        "userName": "Adam",
+        "commentCount": 2,
+        "_id": "56f04089cab8bfde77c236d3"
+    },
+    {
+        "title": "Hillary starts a nuclear war as revenge",
+        "score": 0,
+        "description": "Dont get me started ...",
+        "userName": "Eve",
+        "userId": "56f46365c558e7a529b0b42c",
+        "_id": "56f045a7cab8bfde77c236d4"
+    }
+  ],
+
+  "comments": [
+    {
+      "userId": "56f46365c558e7a529b0b42c",
+      "userName": "Eve",
+      "scenarioId": "56f04089cab8bfde77c236d3",
+      "text": "Gel? what is wrong with u, eh?"
+    },
+    {
+      "userId": "56f46358c558e7a529b0b42b",
+      "userName": "Adam",
+      "scenarioId": "56f04089cab8bfde77c236d3",
+      "text": "Yea like Nuclear war by hillary is any better ...",
+      "score": 1
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+.container {
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.text {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.userName {
+  font-size: 13px;
+  color: blue;
+  margin-right: 5px;
+}
+
+.timeAgo {
+  font-size: 13px;
+  color: rgba(100, 100, 100, .6);
+}
