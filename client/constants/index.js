@@ -1,1 +1,9 @@
-export const API_URL = process.env.NODE_ENV === 'development' ? '//localhost:3001/api' : '//trumpocalypse.io/api'
+let BASE_API_URL = '//localhost:3001'
+if (process.env.NODE_ENV === 'production') {
+  BASE_API_URL = '//trumpocalypse.io'
+}
+if (process.env.NODE_ENV === 'staging') {
+  BASE_API_URL = '//trumpocalypse.io'
+}
+
+export const API_URL = `${BASE_API_URL}/api`

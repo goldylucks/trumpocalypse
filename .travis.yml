@@ -22,8 +22,8 @@ script:
   - if [ "$SCRIPT" ]; then npm run $SCRIPT; fi
 
 before_deploy:
-  - npm run build:client
-  - rm -rf client test
+  - if [ "$TRAVIS_TAG" ]; then npm run build:client:prod; fi
+  - if [ -z "${TRAVIS_TAG+xxx}" ]; then npm run build:client:staging; fi
   - git config --global user.name "travis CI"
   - git config --global user.email "admin@travis-ci.org"
   - git add -f client-dist

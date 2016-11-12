@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "webpack-dev-server -d --history-api-fallback --open --hot --inline --progress --colors --port 3000",
-    "build:client": "NODE_ENV=production webpack --progress --colors",
+    "build:client:prod": "NODE_ENV=production webpack --progress --colors",
+    "build:client:staging": "NODE_ENV=staging webpack --progress --colors",
     "server": "nodemon server/server.js --ignore client --ignore client-dist --ignore node_modules",
     "server:prod": "NODE_ENV=production node server/server.js",
     "lint": "eslint client server --ignore-path .gitignore"

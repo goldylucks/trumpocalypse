@@ -3,13 +3,13 @@ var webpack = require('webpack')
 var path = require('path')
 
 var ENV = process.env.NODE_ENV || 'development'
-var isProd = ENV === 'production'
+var isDev = ENV === 'development'
 var WebpackErrorNotificationPlugin = require('webpack-error-notification')
 
 module.exports = {
-  debug: !isProd,
-  cache: !isProd,
-  devtool: isProd ? '#eval' : '#cheap-module-eval-source-map',
+  debug: isDev,
+  cache: isDev,
+  devtool: !isDev ? '#eval' : '#cheap-module-eval-source-map',
   context: path.join(__dirname, 'client'),
   entry: {
     index: './index.js',
@@ -23,7 +23,7 @@ module.exports = {
       {
         test: /\.js$/,
         include: /client/,
-        loaders: isProd ? [getBabelLoader()] : [
+        loaders: !isDev ? [getBabelLoader()] : [
           'react-hot',
           getBabelLoader(),
         ],
@@ -83,7 +83,7 @@ module.exports = {
       }),
     ]
 
-    if (isProd) {
+    if (!isDev) {
       plugins.push(new webpack.optimize.OccurrenceOrderPlugin(false))
       plugins.push(new webpack.optimize.DedupePlugin())
       plugins.push(new webpack.optimize.UglifyJsPlugin({
@@ -101,7 +101,7 @@ module.exports = {
   }()),
   devServer: {
     contentBase: './client',
-    hot: !isProd,
+    hot: isDev,
   },
 }
 
