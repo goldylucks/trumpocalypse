@@ -10,6 +10,6 @@ module.exports = {
   seed: true,
 
   db: {
-    url: 'mongodb://localhost/nodetyping_dev',
+    url: 'mongodb://localhost/trumpocalypse_dev',
   },
 }
