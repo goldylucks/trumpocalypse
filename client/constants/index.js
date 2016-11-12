@@ -1,1 +1,1 @@
-export const API_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:3001/api' : 'http://trumpocalypse.io/api'
+export const API_URL = process.env.NODE_ENV === 'development' ? '//localhost:3001/api' : '//trumpocalypse.io/api'
