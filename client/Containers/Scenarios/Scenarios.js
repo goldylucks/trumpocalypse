@@ -78,13 +78,12 @@ export default class ScenariosContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
-    console.log(`voting up scenario ${id} ...`)
     try {
-      await axios.put(`${API_URL}/scenarios/${id}/voteUp`)
+      const { data: scoreInc } = await axios.put(`${API_URL}/scenarios/${id}/voteUp`)
       console.log(`voting up scenario success! ${id}`)
       this.setState({
         scenarios: this.state.scenarios.map(s => {
-          if (s._id === id) { s.score++ }
+          if (s._id === id) { s.score += scoreInc }
           return s
         }),
       })
@@ -102,13 +101,12 @@ export default class ScenariosContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
-    console.log(`voting down scenario ${id} ...`)
     try {
-      await axios.put(`${API_URL}/scenarios/${id}/voteDown`)
+      const { data: scoreDec } = await axios.put(`${API_URL}/scenarios/${id}/voteDown`)
       console.log(`voting down scenario success! ${id} ...`)
       this.setState({
         scenarios: this.state.scenarios.map(s => {
-          if (s._id === id) { s.score-- }
+          if (s._id === id) { s.score -= scoreDec }
           return s
         }),
       })

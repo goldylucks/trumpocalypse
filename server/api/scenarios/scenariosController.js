@@ -18,7 +18,6 @@ function get (req, res, next) {
 
 function getOne (req, res, next) {
   const id = req.params.id
-  console.log('getting scenario with id', id)
   Scenarios.findById(id)
     .then(scenario => res.json(scenario))
     .catch(next)
@@ -26,7 +25,6 @@ function getOne (req, res, next) {
 
 function post (req, res, next) {
   const newScenario = req.body
-  console.log('post scenario', req.body)
   newScenario.userId = req.user._id
 
   Scenarios.create(newScenario)
@@ -36,37 +34,56 @@ function post (req, res, next) {
 
 function put (req, res, next) {
   Scenarios.update({ _id: req.params.id }, { $set: req.body })
-    .then(DBres => res.json(DBres))
+    .then(dbRes => res.json(dbRes))
     .catch(next)
 }
 
 function voteUp (req, res, next) {
   const scenarioId = req.params.id
   const userId = req.user._id
-  Promise.all([updateScenario(scenarioId, 1), updateUserVotes(scenarioId, userId, 1)])
-    .then(DBres => res.json(DBres))
-    .catch(next)
+  let scoreInc = 1
+  return Users.findById(userId).then(user => {
+    user = user.toObject()
+    const prevVote = user.scenarioVotes[scenarioId]
+    if (prevVote === 1) {
+      throw Error('Already voted up this scenario!')
+    }
+    if (prevVote === -1) {
+      scoreInc = 2
+    }
+    user.scenarioVotes[scenarioId] = 1
+    return user.scenarioVotes
+  }).then(userScenarioVotes => {
+    return Promise.all([updateScenarioScore(scenarioId, scoreInc), updateUserVotes(userScenarioVotes, userId)])
+  }).then(dbRes => res.json(scoreInc))
+  .catch(next)
 }
 
 function voteDown (req, res, next) {
   const scenarioId = req.params.id
   const userId = req.user._id
-  Promise.all([updateScenario(scenarioId, -1), updateUserVotes(scenarioId, userId, -1)])
-    .then(DBres => res.json(DBres))
-    .catch(next)
-}
-
-function updateUserVotes (scenarioId, userId, vote) {
+  let scoreDec = 1
   return Users.findById(userId).then(user => {
-    console.log('user', user)
     user = user.toObject()
-    user.scenarioVotes[scenarioId] = vote
+    const prevVote = user.scenarioVotes[scenarioId]
+    if (prevVote === -1) {
+      throw Error('Already voted down this scenario!')
+    }
+    if (prevVote === 1) {
+      scoreDec = 2
+    }
+    user.scenarioVotes[scenarioId] = -1
     return user.scenarioVotes
   }).then(userScenarioVotes => {
-    return Users.findOneAndUpdate({ _id: userId }, { $set: { scenarioVotes: userScenarioVotes } })
-  })
+    return Promise.all([updateScenarioScore(scenarioId, -scoreDec), updateUserVotes(userScenarioVotes, userId)])
+  }).then(dbRes => res.json(scoreDec))
+  .catch(next)
 }
 
-function updateScenario (id, vote) {
-  return Scenarios.findOneAndUpdate({ _id: id }, { $inc: { score: vote } })
+function updateUserVotes (userScenarioVotes, userId) {
+  return Users.findOneAndUpdate({ _id: userId }, { $set: { scenarioVotes: userScenarioVotes } })
+}
+
+function updateScenarioScore (id, scoreToInc) {
+  return Scenarios.findOneAndUpdate({ _id: id }, { $inc: { score: scoreToInc } })
 }

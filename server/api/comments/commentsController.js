@@ -1,4 +1,5 @@
 const Comments = require('./commentsModel')
+const Users = require('../users/usersModel')
 
 module.exports = {
   getByScenario: getByScenario,
@@ -17,20 +18,57 @@ function getByScenario (req, res, next) {
 function post (req, res, next) {
   const newComment = req.body
   newComment.userId = req.user._id
-  console.log('newComment', newComment)
   Comments.create(newComment)
     .then(text => res.status(201).json(text))
     .catch(next)
 }
 
 function voteUp (req, res, next) {
-  Comments.findOneAndUpdate({ _id: req.params.id }, { $inc: { score: 1 } })
-    .then(DBres => res.json(DBres))
-    .catch(next)
+  const commentId = req.params.id
+  const userId = req.user._id
+  let scoreInc = 1
+  return Users.findById(userId).then(user => {
+    user = user.toObject()
+    const prevVote = user.commentVotes[commentId]
+    if (prevVote === 1) {
+      throw Error('Already voted up this comment!')
+    }
+    if (prevVote === -1) {
+      scoreInc = 2
+    }
+    user.commentVotes[commentId] = 1
+    return user.commentVotes
+  }).then(userCommentVotes => {
+    return Promise.all([updateCommentScore(commentId, scoreInc), updateUserVotes(userCommentVotes, userId)])
+  }).then(dbRes => res.json(scoreInc))
+  .catch(next)
 }
 
 function voteDown (req, res, next) {
-  Comments.findOneAndUpdate({ _id: req.params.id }, { $inc: { score: -1 } })
-    .then(DBres => res.json(DBres))
-    .catch(next)
+  const commentId = req.params.id
+  const userId = req.user._id
+  let scoreDec = 1
+  return Users.findById(userId).then(user => {
+    user = user.toObject()
+    const prevVote = user.commentVotes[commentId]
+    if (prevVote === -1) {
+      throw Error('Already voted down this comment!')
+    }
+    if (prevVote === 1) {
+      scoreDec = 2
+    }
+    user.commentVotes[commentId] = -1
+    return user.commentVotes
+  }).then(userCommentVotes => {
+    return Promise.all([updateCommentScore(commentId, -scoreDec), updateUserVotes(userCommentVotes, userId)])
+  }).then(dbRes => res.json(scoreDec))
+  .catch(next)
+}
+
+function updateUserVotes (userCommentVotes, userId) {
+  return Users.findOneAndUpdate({ _id: userId }, { $set: { commentVotes: userCommentVotes } })
+}
+
+function updateCommentScore (id, scoreToInc) {
+  return Comments.findOneAndUpdate({ _id: id }, { $inc: { score: scoreToInc } })
 }

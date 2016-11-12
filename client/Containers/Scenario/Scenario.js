@@ -43,7 +43,6 @@ export default class ScenarioContainer extends Component {
   }
 
   componentWillUnMount () {
-    console.log('componentWillUnMount')
     document.addEventListener('keypress', this.listenToEnterNewComment)
   }
 
@@ -124,7 +123,6 @@ export default class ScenarioContainer extends Component {
   async submitComment () {
     const { newCommentText: text } = this.state
     const newComment = { text, userName: this.props.user.name, scenarioId: this.props.params.id, createdAt: String(new Date()), score: 0, key: 5 }
-    console.log('submitting comment ...', newComment)
     this.setState({ comments: this.state.comments.concat(newComment), newCommentText: '' })
     try {
       const newCommentFromServer = await axios.post(`${API_URL}/comments`, newComment)
@@ -138,7 +136,6 @@ export default class ScenarioContainer extends Component {
   }
 
   async fetchScenario () {
-    console.log(`fetching scenario ${this.props.params.id} ...`)
     try {
       const { data: scenario } = await axios.get(`${API_URL}/scenarios/${this.props.params.id}`)
       console.log(`fetching scenario success! ${this.props.params.id} ...`)
@@ -149,7 +146,6 @@ export default class ScenarioContainer extends Component {
   }
 
   async fetchComments () {
-    console.log(`fetching comments for scenario ${this.props.params.id} ...`)
     try {
       const { data: comments } = await axios.get(`${API_URL}/comments/getByScenario/${this.props.params.id}`)
       console.log(`fetching comments for scenario ${this.props.params.id} success!`, comments)
@@ -166,12 +162,11 @@ export default class ScenarioContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
-    console.log(`voting up scenario ${params.id} ...`)
     try {
-      await axios.put(`${API_URL}/scenarios/${params.id}/voteUp`)
-      console.log(`voting up scenario success! ${params.id} ...`)
+      const { data: scoreInc } = await axios.put(`${API_URL}/scenarios/${params.id}/voteUp`)
+      console.log(`voting up scenario success! ${params.id} ... score Inc:`, scoreInc)
       const { scenario } = this.state
-      scenario.score++
+      scenario.score += scoreInc
       this.setState({ scenario })
       user.scenarioVotes[params.id] = 1
       this.props.onUpdateUser(user)
@@ -187,12 +182,11 @@ export default class ScenarioContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
-    console.log(`voting down scenario ${params.id} ...`)
     try {
-      await axios.put(`${API_URL}/scenarios/${params.id}/voteDown`)
+      const { data: scoreDec } = await axios.put(`${API_URL}/scenarios/${params.id}/voteDown`)
       console.log(`voting down scenario success! ${params.id} ...`)
       const { scenario } = this.state
-      scenario.score--
+      scenario.score -= scoreDec
       user.scenarioVotes[params.id] = -1
       this.props.onUpdateUser(user)
       this.setState({ scenario })
@@ -208,14 +202,13 @@ export default class ScenarioContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
-    console.log(`voting up comment ${id} ...`)
     try {
-      await axios.put(`${API_URL}/comments/${id}/voteUp`)
+      const { data: scoreInc } = await axios.put(`${API_URL}/comments/${id}/voteUp`)
       console.log(`voting up comment success! ${id} ...`)
       this.setState({
         comments: this.state.comments.map(c => {
           if (c._id === id) {
-            c.score++
+            c.score += scoreInc
           }
           return c
         }),
@@ -234,14 +227,13 @@ export default class ScenarioContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
-    console.log(`voting down comment ${id} ...`)
     try {
-      await axios.put(`${API_URL}/comments/${id}/voteDown`)
+      const { data: scoreDec } = await axios.put(`${API_URL}/comments/${id}/voteDown`)
       console.log(`voting down comment success! ${id} ...`)
       this.setState({
         comments: this.state.comments.map(c => {
           if (c._id === id) {
-            c.score--
+            c.score -= scoreDec
           }
           return c
         }),
