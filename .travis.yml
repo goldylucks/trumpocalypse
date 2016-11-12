@@ -26,9 +26,7 @@ before_deploy:
   - if [ "$TRAVIS_TAG" ]; then npm run build; fi
   - if [ "$TRAVIS_TAG" ]; then echo tag detected!; fi
   - if [ "$TRAVIS_TAG" ]; then ls; fi
-  - if [ -z "${TRAVIS_TAG+xxx}" ]; then npm run build:staging; fi
-  - if [ -z "${TRAVIS_TAG+xxx}" ]; then echo No travis tag!; fi
-  - if [ -z "${TRAVIS_TAG+xxx}" ]; then ls; fi
+  - if [ -z "$TRAVIS_TAG" ]; then npm run build:staging; fi
   - git config --global user.name "travis CI"
   - git config --global user.email "admin@travis-ci.org"
   - git add -f client-dist
