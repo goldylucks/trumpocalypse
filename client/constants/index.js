@@ -3,7 +3,7 @@ if (process.env.NODE_ENV === 'production') {
   BASE_API_URL = '//trumpocalypse.io'
 }
 if (process.env.NODE_ENV === 'staging') {
-  BASE_API_URL = '//trumpocalypse.io'
+  BASE_API_URL = '//staging.trumpocalypse.io'
 }
 
 export const API_URL = `${BASE_API_URL}/api`
