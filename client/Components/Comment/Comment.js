@@ -7,12 +7,11 @@ import styles from './Comment.css'
 export default class Comment extends Component {
 
   static propTypes = {
-    _id: PropTypes.string.isRequired,
     text: PropTypes.string.isRequired,
     userName: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     score: PropTypes.number.isRequired,
-    userVoteValue: PropTypes.number.isRequired,
+    userVoteValue: PropTypes.number,
     onVoteUp: PropTypes.func.isRequired,
     onVoteDown: PropTypes.func.isRequired,
   }

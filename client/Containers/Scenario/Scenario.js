@@ -83,7 +83,7 @@ export default class ScenarioContainer extends Component {
   }
 
   renderDescription () {
-    const { description } = this.state
+    const { description } = this.state.scenario
     if (description) {
       return (
         <p className={ styles.description }>{ description }</p>
@@ -123,15 +123,15 @@ export default class ScenarioContainer extends Component {
 
   async submitComment () {
     const { newCommentText: text } = this.state
-    const newComment = { text, userName: this.props.user.name, scenarioId: this.props.params.id, createdAt: Date.now() }
+    const newComment = { text, userName: this.props.user.name, scenarioId: this.props.params.id, createdAt: String(new Date()), score: 0, key: 5 }
     console.log('submitting comment ...', newComment)
+    this.setState({ comments: this.state.comments.concat(newComment), newCommentText: '' })
     try {
       const newCommentFromServer = await axios.post(`${API_URL}/comments`, newComment)
-      this.setState({ comments: this.state.comments.concat(newCommentFromServer) })
-      console.log(`submitting comment success! ${text} ...`)
+      console.log('submitting comment success!', newCommentFromServer)
       this.setState({ newCommentText: '' })
     } catch (err) {
-      console.warn(`submitting comment err :( ${text} ...`)
+      console.warn('submitting comment err :(', err)
     } finally {
       this.fetchComments()
     }
