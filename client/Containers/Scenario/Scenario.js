@@ -113,13 +113,6 @@ export default class ScenarioContainer extends Component {
     this.setState({ newCommentText: evt.target.value })
   }
 
-  listenToEnterNewComment = evt => {
-    if (evt.keyCode !== 13 || document.activeElement !== ReactDOM.findDOMNode(this._commentInput)) {
-      return
-    }
-    this.submitComment()
-  }
-
   async submitComment () {
     const { newCommentText: text } = this.state
     const newComment = { text, userName: this.props.user.name, scenarioId: this.props.params.id, createdAt: String(new Date()), score: 0, key: 5 }
@@ -162,16 +155,15 @@ export default class ScenarioContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
+    this.onVoteUpOptimisticUpdate()
     try {
-      const { data: scoreInc } = await axios.put(`${API_URL}/scenarios/${params.id}/voteUp`)
-      console.log(`voting up scenario success! ${params.id} ... score Inc:`, scoreInc)
-      const { scenario } = this.state
-      scenario.score += scoreInc
-      this.setState({ scenario })
+      await axios.put(`${API_URL}/scenarios/${params.id}/voteUp`)
+      console.log(`voting up scenario success! ${params.id} ...`)
       user.scenarioVotes[params.id] = 1
       this.props.onUpdateUser(user)
     } catch (err) {
       console.warn(`voting up scenario err:( ${this.props.params.id} ...`, err)
+      this.onVoteUpOptimisticUpdate({ reverse: true })
     }
   }
 
@@ -182,15 +174,14 @@ export default class ScenarioContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
+    this.onVoteDownOptimisticUpdate()
     try {
-      const { data: scoreDec } = await axios.put(`${API_URL}/scenarios/${params.id}/voteDown`)
+      await axios.put(`${API_URL}/scenarios/${params.id}/voteDown`)
       console.log(`voting down scenario success! ${params.id} ...`)
-      const { scenario } = this.state
-      scenario.score -= scoreDec
       user.scenarioVotes[params.id] = -1
       this.props.onUpdateUser(user)
-      this.setState({ scenario })
     } catch (err) {
+      this.onVoteDownOptimisticUpdate({ reverse: true })
       console.warn(`voting down scenario er :( ${params.id} ...`, err)
     }
   }
@@ -202,21 +193,15 @@ export default class ScenarioContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
+    this.onCommentVoteUpOptimisticUpdate(id)
     try {
-      const { data: scoreInc } = await axios.put(`${API_URL}/comments/${id}/voteUp`)
+      await axios.put(`${API_URL}/comments/${id}/voteUp`)
       console.log(`voting up comment success! ${id} ...`)
-      this.setState({
-        comments: this.state.comments.map(c => {
-          if (c._id === id) {
-            c.score += scoreInc
-          }
-          return c
-        }),
-      })
       user.commentVotes[id] = 1
       this.props.onUpdateUser(user)
     } catch (err) {
       console.warn(`voting up comment err :( ${id} ...`, err)
+      this.onCommentVoteUpOptimisticUpdate(id, { reverse: true })
     }
   }
 
@@ -227,22 +212,93 @@ export default class ScenarioContainer extends Component {
       this.context.router.push({ pathname: '/auth' })
       return
     }
+    this.onCommentVoteDownOptimisticUpdate(id)
     try {
-      const { data: scoreDec } = await axios.put(`${API_URL}/comments/${id}/voteDown`)
+      axios.put(`${API_URL}/comments/${id}/voteDown`)
       console.log(`voting down comment success! ${id} ...`)
-      this.setState({
-        comments: this.state.comments.map(c => {
-          if (c._id === id) {
-            c.score -= scoreDec
-          }
-          return c
-        }),
-      })
       user.commentVotes[id] = -1
       this.props.onUpdateUser(user)
     } catch (err) {
       console.warn(`voting down comment err :( ${id} ...`, err)
+      this.onCommentVoteDownOptimisticUpdate(id, { reverse: true })
     }
+  }
+
+  onVoteUpOptimisticUpdate ({ reverse } = {}) {
+    const { scenario } = this.state
+    let scoreInc = 1
+    if (this.getUserScenarioVote() === -1) {
+      scoreInc = 2
+    }
+    if (reverse) {
+      scoreInc = -scoreInc
+    }
+    scenario.score += scoreInc
+    this.setState({ scenario })
+  }
+
+  onVoteDownOptimisticUpdate ({ reverse } = {}) {
+    const { scenario } = this.state
+    let scoreDec = 1
+    if (this.getUserScenarioVote() === 1) {
+      scoreDec = 2
+    }
+    if (reverse) {
+      scoreDec = -scoreDec
+    }
+    scenario.score -= scoreDec
+    this.setState({ scenario })
+  }
+
+  getUserScenarioVote () {
+    return this.props.user.scenarioVotes[this.props.params.id]
+  }
+
+  onCommentVoteUpOptimisticUpdate (id, { reverse } = {}) {
+    let scoreInc = 1
+    if (this.getUserCommentVote(id) === -1) {
+      scoreInc = 2
+    }
+    if (reverse) {
+      scoreInc = -scoreInc
+    }
+    this.setState({
+      comments: this.state.comments.map(c => {
+        if (c._id === id) {
+          c.score += scoreInc
+        }
+        return c
+      }),
+    })
+  }
+
+  onCommentVoteDownOptimisticUpdate (id, { reverse } = {}) {
+    let scoreDec = 1
+    if (this.getUserCommentVote(id) === 1) {
+      scoreDec = 2
+    }
+    if (reverse) {
+      scoreDec = -scoreDec
+    }
+    this.setState({
+      comments: this.state.comments.map(c => {
+        if (c._id === id) {
+          c.score -= scoreDec
+        }
+        return c
+      }),
+    })
+  }
+
+  getUserCommentVote (id) {
+    return this.props.user.commentVotes[id]
+  }
+
+  listenToEnterNewComment = evt => {
+    if (evt.keyCode !== 13 || document.activeElement !== ReactDOM.findDOMNode(this._commentInput)) {
+      return
+    }
+    this.submitComment()
   }
 
 }
