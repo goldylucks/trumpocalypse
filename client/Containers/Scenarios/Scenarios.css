@@ -42,6 +42,7 @@
 
 .scenariosStats {
   margin-left: auto;
+  flex: 0.2;
   font-size: 13px;
   color: rgba(100, 100, 100, .6)
 }
