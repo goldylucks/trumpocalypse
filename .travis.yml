@@ -26,8 +26,8 @@ before_deploy:
   - rm -rf client test
   - git config --global user.name "travis CI"
   - git config --global user.email "admin@travis-ci.org"
-  - git add -f build
-  - git commit -m "add build"
+  - git add -f client-dist
+  - git commit -m "add client-dist"
 
 deploy:
   - provider: heroku
