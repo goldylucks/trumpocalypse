@@ -1,5 +1,6 @@
 const Comments = require('./commentsModel')
 const Users = require('../users/usersModel')
+const Scenarios = require('../scenarios/scenariosModel')
 
 module.exports = {
   getByScenario: getByScenario,
@@ -18,7 +19,8 @@ function getByScenario (req, res, next) {
 function post (req, res, next) {
   const newComment = req.body
   newComment.userId = req.user._id
-  Comments.create(newComment)
+  Promise.all([Comments.create(newComment), Scenarios.findOneAndUpdate({ _id: newComment.scenarioId }, { $inc: { commentCount: 1 } })])
+    .then(dbRes => dbRes[0])
     .then(text => res.status(201).json(text))
     .catch(next)
 }
