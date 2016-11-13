@@ -14,6 +14,7 @@
     "lint": "eslint client server --ignore-path .gitignore"
   },
   "dependencies": {
+    "async": "^2.1.2",
     "axios": "^0.15.2",
     "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.2",

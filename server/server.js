@@ -25,6 +25,7 @@ if (!module.parent) {
   app.listen(config.port)
 }
 
-console.log('listening on port ' + config.port)
+require('./backgroundWorkers/scenarioCommentCountSync')
 
+console.log('listening on port ' + config.port)
 module.exports = app
