@@ -29,6 +29,7 @@ export default class ScenariosContainer extends Component {
   render () {
     return (
       <div className={ styles.container }>
+        <img src={ 'https://media.tenor.co/images/cffcc50688433f8061982313b0fdc5ab/tenor.gif' } className={ styles.backgroundGif } />
         <h1 className={ styles.title }>What is YOUR favorite Trumpocalypse scenario?</h1>
         <p>{ this.renderSubmitLink() }, rate and comment on others!</p>
         { this.renderScenarios() }
