@@ -23,6 +23,15 @@
   color: #fff;
 }
 
+.leadText {
+  color: #eee;
+}
+
+.leadText a {
+  text-decoration: underline;
+  color: #eee;
+}
+
 .scenario {
   display: flex;
   margin: 0 auto;
@@ -42,6 +51,7 @@
   color: inherit;
   align-self: center;
   font-size: 14px;
+  color: #eee;
 }
 
 .scenarioTitle {

@@ -31,7 +31,7 @@ export default class ScenariosContainer extends Component {
       <div className={ styles.container }>
         <img src={ 'https://media.tenor.co/images/cffcc50688433f8061982313b0fdc5ab/tenor.gif' } className={ styles.backgroundGif } />
         <h1 className={ styles.title }>What is YOUR favorite Trumpocalypse scenario?</h1>
-        <p>{ this.renderSubmitLink() }, rate and comment on others!</p>
+        <p className={ styles.leadText }>{ this.renderSubmitLink() }, rate and comment on others!</p>
         { this.renderScenarios() }
       </div>
     )
@@ -41,6 +41,7 @@ export default class ScenariosContainer extends Component {
     return this.state.scenarios.map(s => (
       <div className={ styles.scenario } key={ s._id }>
         <Vote
+          scoreStyle={ { color: '#eee' } }
           userVoteValue={ this.props.user.scenarioVotes && this.props.user.scenarioVotes[s._id] }
           score={ s.score }
           onVoteDown={ this.onVoteDown.bind(this, s._id) }

@@ -9,15 +9,16 @@ export default class Vote extends Component {
     onVoteUp: PropTypes.func.isRequired,
     onVoteDown: PropTypes.func.isRequired,
     userVoteValue: PropTypes.number,
+    scoreStyle: PropTypes.object,
     size: PropTypes.string,
   }
 
   render () {
-    const { score, size } = this.props
+    const { score, size, scoreStyle } = this.props
     return (
       <div className={ [styles.container, styles[size], this.userVoteClass()].join(' ') }>
         <a className={ [styles.voteUp, styles[size]].join(' ') } onClick={ this.onVoteUp }></a>
-        <span className={ [styles.score, styles[size]].join(' ') }>{ score }</span>
+        <span style={ scoreStyle } className={ [styles.score, styles[size]].join(' ') }>{ score }</span>
         <a className={ [styles.voteDown, styles[size]].join(' ') } onClick={ this.onVoteDown }></a>
       </div>
     )
