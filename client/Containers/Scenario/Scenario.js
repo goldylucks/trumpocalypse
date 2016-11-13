@@ -131,20 +131,20 @@ export default class ScenarioContainer extends Component {
   async fetchScenario () {
     try {
       const { data: scenario } = await axios.get(`${API_URL}/scenarios/${this.props.params.id}`)
-      console.log(`fetching scenario success! ${this.props.params.id} ...`)
+      console.log('fetching scenario success!', scenario)
       this.setState({ scenario, ready: true })
     } catch (err) {
-      console.log(`fetching scenario err :( ${this.props.params.id} ...`)
+      console.log(`fetching scenario err :( ${this.props.params.id}`)
     }
   }
 
   async fetchComments () {
     try {
       const { data: comments } = await axios.get(`${API_URL}/comments/getByScenario/${this.props.params.id}`)
-      console.log(`fetching comments for scenario ${this.props.params.id} success!`, comments)
+      console.log('fetching comments success!', comments)
       this.setState({ comments })
     } catch (err) {
-      console.log(`fetching comments for scenario ${this.props.params.id} err :(`, err)
+      console.log('fetching comments err :(', err)
     }
   }
 

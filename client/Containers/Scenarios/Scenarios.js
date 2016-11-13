@@ -67,9 +67,13 @@ export default class ScenariosContainer extends Component {
   }
 
   async fetchScenarios () {
-    console.log('fetching scenarios ...')
-    const { data: scenarios } = await axios.get(`${API_URL}/scenarios`)
-    this.setState({ scenarios })
+    try {
+      const { data: scenarios } = await axios.get(`${API_URL}/scenarios`)
+      console.log('fetching scenarios success!', scenarios)
+      this.setState({ scenarios })
+    } catch (err) {
+      console.log('fetching scenarios err :(', err)
+    }
   }
 
   async onVoteUp (id) {
